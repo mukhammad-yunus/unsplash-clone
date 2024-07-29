@@ -14,7 +14,6 @@ const breakpointColumnsObj = {
 
 
 const ImageContainer = ({data}) => {
-  console.log(data[0]);
   return (
     <Masonry
       breakpointCols={breakpointColumnsObj}
