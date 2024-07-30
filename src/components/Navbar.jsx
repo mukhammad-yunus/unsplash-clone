@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import logo from "../assets/logo.svg";
 import { IoSearch } from "react-icons/io5";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+
 import { RxCross2 } from "react-icons/rx";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import NavListDisplay from "./subComponents/NavListDisplay";
+import { FaHeart } from "react-icons/fa6";
 // import ApiContext from "../../src copy/contexts/ApiContext";
 
 const getHistory = () => {
@@ -107,15 +109,7 @@ const Navbar = () => {
     };
   }, []);
 
-  //I have to replace below with the actual topic array from the api
-  const topicArr = new Array(20).fill(0);
-  const renderTopics = (array) => {
-    return array.map((arr, index) => (
-      <NavLink key={index} to={`/t/hello${index}`} className={({isActive})=> ` block cursor-pointer px-2 box-content hover:shadow hover:text-neutral-950 ${isActive ? "text-neutral-900 border-b-2 font-bold border-b-black ":"text-neutral-600"}`}>
-        Hello{index}
-      </NavLink>
-    ));
-  };
+  
   return (
     <nav className="flex flex-col sticky pt-3 px-2  md:px-3 top-0 left-0 right-0 bg-white border-b z-20">
       <section className="flex gap-2 items-center sm:gap-4">
@@ -199,23 +193,14 @@ const Navbar = () => {
             />
           )}
         </div>
+        <NavLink
+      to={`/Favorites`}
+      className='flex items-center justify-center cursor-pointer box-content '
+    >
+      <FaHeart className="fill-red-500 text-xl sm:text-3xl lg:text-4xl"/ >
+    </NavLink>
       </section>
-      <section className="flex gap-3 w-full relative py-4 md:py-5">
-        {/* Below is the arrow to move the topic bars.
-        The things i have to apply to arrows:
-          - moving functionality
-          - disappearing the left/right arrow when the first/last item is on the screen.
-         */}
-        <div className="pr-16 bg-gradient-to-r from-white from-20% to-transparent absolute left-0 top-0 bottom-0 flex items-center ">
-          <IoIosArrowBack />
-        </div>
-        <div className="flex gap-3 w-full overflow-x-scroll no-scrollbar">
-          {renderTopics(topicArr)}
-        </div>
-        <div className=" pl-16 bg-gradient-to-r from-transparent to-white to-80% absolute right-0 top-0 bottom-0 flex items-center">
-          <IoIosArrowForward />
-        </div>
-      </section>
+      <NavListDisplay/>
     </nav>
   );
 };

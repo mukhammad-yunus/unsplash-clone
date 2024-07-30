@@ -40,7 +40,7 @@ const CurrentImage = () => {
     If the component returns before some hook, for example, useEffect, there is an error "Rendered more hooks than during the previous render."  
 */
   const { photoId } = useParams();
-  const { getFromApi } = useContext(ApiContext);
+  const { getFromApi, handleLikedImg } = useContext(ApiContext);
   const [isLiked, setIsLiked] = useState(() => {
     const favourites =
       JSON.parse(localStorage.getItem("favourite-images")) || [];
@@ -56,7 +56,6 @@ const CurrentImage = () => {
         `https://api.unsplash.com/photos/${photoId}`
       );
       setImage(data);
-      console.log(data);
     };
     getCurrentImage();
   }, [photoId]);
@@ -81,26 +80,7 @@ const CurrentImage = () => {
   if (!image) return <Loading />;
 
 
-  const handleLikedImg = () => {
-    const favourites =
-      JSON.parse(localStorage.getItem("favourite-images")) || [];
-    if (favourites.length) {
-      if (isLiked) {
-        const dislike = favourites.filter((item) => item.id !== image.id);
-        const favourites_str = JSON.stringify(dislike);
-        localStorage.setItem("favourite-images", favourites_str);
-        setIsLiked(false);
-      } else {
-        const favourites_str = JSON.stringify([image, ...favourites]);
-        localStorage.setItem("favourite-images", favourites_str);
-        setIsLiked(true);
-      }
-    } else {
-      const favourites_str = JSON.stringify([image]);
-      localStorage.setItem("favourite-images", favourites_str);
-      setIsLiked(true);
-    }
-  };
+  
   const getCreatedDate = () => {
     const dateString = image.created_at;
     // Convert the string to a Date object
@@ -123,6 +103,7 @@ const CurrentImage = () => {
         {/* there are some work on the div below
           + click event for the heart icon ---> adds the current image details on the local storage and changes its fill into white bg into pale red.
           - download button should have different color than this one ---> i have to add some custom color in tailwind config.
+          - download button should have different color than this one ---> i have to add some custom color in tailwind config. 
 
            */}
         <div className="flex justify-between gap-2">
@@ -134,7 +115,7 @@ const CurrentImage = () => {
                   : "fill-black/50 hover:fill-black/15 "
               }`}
               size={17}
-              onClick={() => handleLikedImg()}
+              onClick={(e) => handleLikedImg(e, image,isLiked, setIsLiked)}
             />
           </div>
           <div className="relative group flex items-center bg-white text-gray-500 transition border-gray-200">
