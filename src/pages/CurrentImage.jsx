@@ -42,10 +42,10 @@ const CurrentImage = () => {
   const { photoId } = useParams();
   const { getFromApi, handleLikedImg } = useContext(ApiContext);
   const [isLiked, setIsLiked] = useState(() => {
-    const favourites =
-      JSON.parse(localStorage.getItem("favourite-images")) || [];
-    if (!favourites.length) return false;
-    return favourites.some((item) => item.id == photoId);
+    const favorites =
+      JSON.parse(localStorage.getItem("favorite-images")) || [];
+    if (!favorites.length) return false;
+    return favorites.some((item) => item.id == photoId);
   });
   const [isDownloadbarOpen, setIsDownloadbarOpen] = useState(false);
   const navigate = useNavigate();

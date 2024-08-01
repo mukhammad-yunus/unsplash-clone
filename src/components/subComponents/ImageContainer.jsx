@@ -6,10 +6,10 @@ import ImageAuthor from "./ImageAuthor";
 import ApiContext from "../../contexts/ApiContext";
 const Image = ({ data }) => {
   const [isLiked, setIsLiked] = useState(() => {
-    const favourites =
-      JSON.parse(localStorage.getItem("favourite-images")) || [];
-    if (!favourites.length) return false;
-    return favourites.some((item) => item.id == data.id);
+    const favorites =
+      JSON.parse(localStorage.getItem("favorite-images")) || [];
+    if (!favorites.length) return false;
+    return favorites.some((item) => item.id == data.id);
   });
   const {handleLikedImg} = useContext(ApiContext)
   return (

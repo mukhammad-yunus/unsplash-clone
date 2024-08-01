@@ -1,24 +1,42 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import sample from '../assets/sample.jpg'
-
+import ApiContext from '../contexts/ApiContext'
+import { Link } from "react-router-dom";
 const Header = () => {
+  const [collections, setCollections] = useState([])
+  const [featured, setFeatured] = useState(false)
+  const {getFromApi} = useContext(ApiContext)
   /*
       - colArr is just temporary array of collections. Elements in the array are just 0s. In the future there will be the real collections array. Then, I can delete collArr
       - displayColl is a variable that stores the rendered collections
   */
   const colArr = new Array(4).fill(0)
-  const displayColl = ()=>(colArr.map((arr, index)=>{
+  const displayColl = ()=>{
+    if (!collections.length) return <div className="">Loading...</div>
+
+    return collections.map((collection, index)=>{
     return (
-      <div key={index} className="flex items-center gap-2 cursor-pointer rounded transition-all px-2 hover:bg-zinc-100">
-        <img src={sample} alt="" className="block w-7 h-7 object-cover rounded"/>
+      <div onClick={() => window.open(collection.links.html)} key={collection.id} className="flex items-center gap-2 cursor-pointer rounded transition-all px-2 hover:bg-zinc-100">
+        <img src={collection.cover_photo.urls.thumb} alt="" className="block w-7 h-7 object-cover rounded"/>
         <div className="">
-          <p className="font-bold text-sm text-neutral-800">Shot on Iphone</p>
-          <p className=" text-xs">by Behnam Norouzi</p>
+          <p className="font-bold text-sm text-neutral-800">{collection.title}</p>
+          <p className=" text-xs">by {collection.user.name}</p>
         </div>
       </div>
     )
-  }))
+  })}
+
+  useEffect(() => {
+    const handleCollections = async ()=>{
+      const result_collection = await getFromApi('https://api.unsplash.com/collections?per_page=4&page=4')
+      const result_featured = await getFromApi('https://api.unsplash.com/photos/random')
+      setCollections([...result_collection])
+      setFeatured(result_featured)
+    }
+    handleCollections()
+  }, [])
+  
   return (
     <header className="grid grid-cols-small-header grid-rows-custom-header gap-x-4 overflow-x-scroll no-scrollbar md:grid-cols-usual-header lg:grid-cols-big-screen-header justify-between mb-12">
       <section className="h-full flex flex-col justify-end">
@@ -55,13 +73,18 @@ const Header = () => {
         </div>
       </section>
       <section className="h-full border rounded-md overflow-hidden cursor-pointer">
-        <div className="group bg-black w-full h-full relative">
-          <img src={sample} alt="" className="w-full h-full object-cover group-hover:scale-110 transition" />
-          <div className="absolute bottom-5 left-5 text-white">
-            <p className="text-xs">featured</p>
-            <p className="text-[15px]">Behnam Norouzi</p>
-          </div>
-        </div>
+        { featured?
+            <div className="group bg-black w-full h-full relative"
+              onClick={() => window.open(featured.links.html)}
+            >
+              <img src={featured.urls.regular} alt="" className="w-full h-full object-cover group-hover:scale-110 transition" />
+              <div className="absolute bottom-5 left-5 text-white">
+                <p className="text-xs">featured</p>
+                <p className="text-[15px]">{featured.user.name}</p>
+              </div>
+            </div>:
+            <div className="">Loading...</div>
+          }
       </section>
     </header>
   );

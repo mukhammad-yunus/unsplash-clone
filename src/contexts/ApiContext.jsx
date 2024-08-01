@@ -36,6 +36,8 @@ export const ApiContextProvider = ({ children }) => {
   const [homePageImagesArr, setHomePageImagesArr] = useState([]);
   const [topicsArr, setTopicsArr] = useState([])
   const [navTitles, setNavTitles] = useState([])
+  const [localStorageChanged, setLocalStorageChanged] = useState(false)
+  
   /*
   the things I have to do:
     - make an api request for random images when home page is loaded
@@ -57,23 +59,30 @@ export const ApiContextProvider = ({ children }) => {
 
   }, []);
   const handleLikedImg = (e, image,isLiked, setIsLiked) => {
+    setLocalStorageChanged(prev=>!prev)
     e.preventDefault()
-    const favourites =
-      JSON.parse(localStorage.getItem("favourite-images")) || [];
-    if (favourites.length) {
+    const favorites =
+      JSON.parse(localStorage.getItem("favorite-images")) || [];
+    if (favorites.length >= 20) {
+      /*
+        there should be a logic for limitation of the local storage
+      */
+    }
+    
+      if (favorites.length) {
       if (isLiked) {
-        const dislike = favourites.filter((item) => item.id !== image.id);
-        const favourites_str = JSON.stringify(dislike);
-        localStorage.setItem("favourite-images", favourites_str);
+        const dislike = favorites.filter((item) => item.id !== image.id);
+        const favorites_str = JSON.stringify(dislike);
+        localStorage.setItem("favorite-images", favorites_str);
         setIsLiked(false);
       } else {
-        const favourites_str = JSON.stringify([image, ...favourites]);
-        localStorage.setItem("favourite-images", favourites_str);
+        const favorites_str = JSON.stringify([image, ...favorites]);
+        localStorage.setItem("favorite-images", favorites_str);
         setIsLiked(true);
       }
     } else {
-      const favourites_str = JSON.stringify([image]);
-      localStorage.setItem("favourite-images", favourites_str);
+      const favorites_str = JSON.stringify([image]);
+      localStorage.setItem("favorite-images", favorites_str);
       setIsLiked(true);
     }
   };
@@ -87,7 +96,8 @@ export const ApiContextProvider = ({ children }) => {
         homePageImagesArr,
         handleLikedImg,
         topicsArr,
-        navTitles
+        navTitles,
+        change: localStorageChanged,
       }}
     >
       {children}
