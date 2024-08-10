@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import ImageAuthor from "./ImageAuthor";
 import ApiContext from "../../contexts/ApiContext";
 const Image = ({ data }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [isLiked, setIsLiked] = useState(() => {
     const favorites =
       JSON.parse(localStorage.getItem("favorite-images")) || [];
@@ -15,7 +16,7 @@ const Image = ({ data }) => {
   return (
     <Link
       to={`/photo/${data.id}`}
-      className=" block relative md:overflow-hidden mb-16 md:mb-6"
+      className={`${isLoaded? 'block': 'hidden'} relative md:overflow-hidden mb-16 md:mb-6`}
     >
       {/* Below code is for the SMALLER screen */}
       <div className="mb-4 sm:hidden">
@@ -24,6 +25,7 @@ const Image = ({ data }) => {
       <img
         src={data.urls.small}
         alt={data.alt_description}
+        onLoad={()=> setIsLoaded(true)}
         className="w-full h-full"
       />
       {/* Below code is for the LARGER screen */}

@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import logo from "../assets/logo.svg";
 import { IoSearch } from "react-icons/io5";
-
 import { RxCross2 } from "react-icons/rx";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import NavListDisplay from "./subComponents/NavListDisplay";
 import { FaHeart } from "react-icons/fa6";
+import ApiContext from "../contexts/ApiContext";
 // import ApiContext from "../../src copy/contexts/ApiContext";
 
 const getHistory = () => {
@@ -29,7 +29,7 @@ const Navbar = () => {
         - inputParentCName --> a css class value for the parent div of search input, improvising based on the state of isInputFocused
   */
   // const {searchInputValue, setSearchInputValue} = useContext(ApiContext);
-  const [searchInputValue, setSearchInputValue] = useState("")
+  const {searchInputValue, setSearchInputValue} = useContext(ApiContext)
   const navigate = useNavigate();
   const inputRef = useRef(null);
   const [searchHistory, setSearchHistory] = useState(getHistory());

@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import sample2 from "../assets/sample2.jpg";
 import ImageAuthor from "../components/subComponents/ImageAuthor";
-import Loading from "../components/Loading";
+import Loader from "../components/Loader";
 import { FaHeart, FaRegCalendar, FaRegCopyright } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
@@ -40,7 +39,7 @@ const CurrentImage = () => {
     If the component returns before some hook, for example, useEffect, there is an error "Rendered more hooks than during the previous render."  
 */
   const { photoId } = useParams();
-  const { getFromApi, handleLikedImg } = useContext(ApiContext);
+  const { getFromApi, handleLikedImg, downloadImage } = useContext(ApiContext);
   const [isLiked, setIsLiked] = useState(() => {
     const favorites =
       JSON.parse(localStorage.getItem("favorite-images")) || [];
@@ -65,8 +64,8 @@ const CurrentImage = () => {
         const purpose = e.target.dataset.purpose;
         if (purpose !== 'not-close' || isDownloadbarOpen) {
           setIsDownloadbarOpen(false);
-        } else if (purpose === 'not-close' && !isDownloadbarOpen) {
-          setIsDownloadbarOpen(true);
+        } else if (purpose == 'not-close') {
+          setIsDownloadbarOpen(prev=> !prev);
         }
       }
 
@@ -76,8 +75,8 @@ const CurrentImage = () => {
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [isDownloadbarOpen]);
-  if (!image) return <Loading />;
+  }, []);
+  if (!image) return <Loader />;
 
 
   
@@ -91,9 +90,6 @@ const CurrentImage = () => {
       date
     );
     return formattedDate;
-  };
-  const handleDownload = (width) => {
-    console.log(width);
   };
   return (
     <div className="mt-4 text-sm text-gray-500 sm:mt-6">
@@ -119,11 +115,12 @@ const CurrentImage = () => {
             />
           </div>
           <div className="relative group flex items-center bg-white text-gray-500 transition border-gray-200">
-            <button className="block h-full px-2 hover:z-10 hover:border-gray-700 border rounded-s  cursor-default">
+            <button className="block h-full px-2 hover:z-10 hover:border-gray-700 border rounded-s  cursor-pointer"
+              onClick={()=> downloadImage({ name: image.slug, url: image.urls.full })}
+            >
               Download
             </button>
             <div
-              data-purpose="not-close"
               className="px-2 h-full flex items-center border -translate-x-[1px] hover:z-10 hover:border-gray-700 rounded-e cursor-pointer"
             >
               <IoIosArrowDown
@@ -134,7 +131,6 @@ const CurrentImage = () => {
             <DownloadButton
               image={image}
               isOpen={isDownloadbarOpen}
-              handleDownload={handleDownload}
             />
           </div>
         </div>

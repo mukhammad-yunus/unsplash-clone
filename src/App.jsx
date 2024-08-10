@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Navbar from "./components/Navbar.jsx";
-import Loading from "./components/Loading.jsx";
+import Loader from "./components/Loader.jsx";
 import { Outlet } from "react-router-dom";
 import ApiContext from "./contexts/ApiContext.jsx";
 
@@ -11,7 +11,7 @@ const App = () => {
               - Navbar --> navigation bar
               - Outlet --> it is a react-router-dom element, is used in parent route elements to render their child route elements
   */
-  if(!topicsArr.length) return <Loading/>
+  if(!topicsArr.length) return <Loader/>
   return (
     <div className="font-custom relative text-gray-500 px-4 max-w-[1280px] mx-auto">
       <Navbar/>

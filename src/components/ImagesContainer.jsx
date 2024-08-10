@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import Masonry from "react-masonry-css";
 import Image from "./subComponents/ImageContainer";
 
@@ -8,16 +8,11 @@ const breakpointColumnsObj = {
   750: 1,
 };
 
-
-const ImageContainer = ({data}) => {
+const ImageContainer = ({ data }) => {
   return (
-    <Masonry
-      breakpointCols={breakpointColumnsObj}
-      className="flex gap-6"
-    >
-      {data?.map((item, index)=>{
-        const num = Math.floor(Math.random() * 2) + 1;
-        return <Image data={item} key={index} />
+    <Masonry breakpointCols={breakpointColumnsObj} className="flex gap-6">
+      {data?.map((item, index) => {
+        return <Image data={item} key={index} />;
       })}
     </Masonry>
   );
